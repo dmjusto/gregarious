@@ -19,10 +19,9 @@ public class PlayerController : MonoBehaviour
   void Start () 
   {
     rigidbody2D = gameObject.GetComponent<Rigidbody2D>();
-    gameObject.GetComponent<DotClass>().SetColor(1, 72, 88);
-    
+    gameObject.GetComponent<DotClass>().SetColor(229, 4, 96);
   }
-  
+
   // Update is called once per frame
   void Update () 
   {
