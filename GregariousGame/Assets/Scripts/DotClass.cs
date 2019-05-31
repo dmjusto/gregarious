@@ -18,6 +18,10 @@ public class DotClass : MonoBehaviour
   private float brightness;
   private SpriteRenderer sprite;
 
+
+
+
+
   //constructor
   //public DotClass(float _hue, float _saturation, float _brightness)
   //{

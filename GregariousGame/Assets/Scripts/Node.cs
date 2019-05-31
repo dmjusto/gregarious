@@ -7,11 +7,12 @@ namespace Pathfinding
 
   public class Node
   {
-    private int gridX;
-    private int gridY;
+    public int gridX;
+    public int gridY;
     public Vector2 pos;
 
-    public Node parent;
+
+    public List<Node> neighborNodes = new List<Node>();
 
 
     public Node(int _gridX, int _gridY,Vector2 _position)

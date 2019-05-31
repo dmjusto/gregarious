@@ -25,7 +25,7 @@ namespace Pathfinding
 
 
     // Use this for initialization
-    void Start()
+    void Awake()
     {
       gridOffset = cellSize;
       var cameraObj = GameObject.FindWithTag("MainCamera");
@@ -36,8 +36,13 @@ namespace Pathfinding
       screenSize.y *= 2;
       numPointsX = (int)Mathf.Round((screenSize.x - gridOffset) / cellSize);
       numPointsY = (int)Mathf.Round((screenSize.y - gridOffset) / cellSize);
+      grid = new Node[numPointsX, numPointsY];
 
       GenerateGrid();
+      GetNeighborNodes();
+
+
+
       Instantiate(player, new Vector2(0, 0), Quaternion.identity);
       PopulateParty(numGuests);
 
@@ -46,12 +51,12 @@ namespace Pathfinding
 
     void Update()
     {
-      
+      DrawNodeConnections();
     }
 
     private void GenerateGrid()
     {
-      grid = new Node[numPointsX, numPointsY];
+
       for(int i = 0; i < numPointsX; i++)
       {
         for(int j = 0; j < numPointsY; j++)
@@ -67,11 +72,57 @@ namespace Pathfinding
 
     }
 
+
+
+    private void GetNeighborNodes()
+    {
+      foreach(Node _node in grid)
+      {
+        for(int i = -1; i <=1; i++)
+        {
+          for(int j = -1; j <= 1; j++)
+          {
+            if(_node.gridX + i < grid.GetLength(0) && _node.gridY + j < grid.GetLength(1))
+            {
+              if(_node.gridX + i >= 0 && _node.gridY + j >= 0)
+              {
+                _node.neighborNodes.Add(grid[_node.gridX + i, _node.gridY + j]);
+              }
+            }
+          }
+        }
+      }
+    }
+
+
+    private void DrawNodeConnections()
+    {
+      Dictionary<Node[], bool> alreadyDrawn = new Dictionary<Node[], bool>();
+      foreach (Node _node in grid)
+      {
+        foreach(Node _connection in _node.neighborNodes)
+        {
+          Node[] complimentPair = { _connection, _node };
+          if (!alreadyDrawn.ContainsKey(complimentPair))
+          {
+            Debug.DrawLine(_node.pos, _connection.pos, Color.blue);
+            alreadyDrawn.Add(complimentPair, true);
+          }
+
+        }
+      }
+    }
+
+
+
+
+
+
     private void PopulateParty(int _numGuests)
     {
       for(int i = 0; i < numGuests; i++)
       {
-        Node randomNode = availableNodes[(int)(Random.Range(0, availableNodes.Count))];
+        Node randomNode = availableNodes[Random.Range(0, availableNodes.Count)];
         Instantiate(partyGuest, randomNode.pos, Quaternion.identity);
         unavailableNodes.Add(randomNode);
         availableNodes.Remove(randomNode);
